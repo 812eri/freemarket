@@ -47,6 +47,28 @@ class PurchaseController extends Controller
             return back()->withErrors(['address' => '配送先を設定してください。']);
         }
 
+        $paymentMethod = $request->input('payment_method');
+
+        if ($paymentMethod === 'conbini') {
+            DB::transaction(function () use ($item, $address, $paymentMethod) {
+                $item->update([
+                    'is_sold' => true,
+                    'buyer_id' => Auth::id(),
+                    'status' => 'sold',
+                ]);
+
+                Purchase::create([
+                    'user_id'        => Auth::id(),
+                    'item_id'        => $item->id,
+                    'address_id'     => $address->id,
+                    'payment_method' => $paymentMethod,
+                    'status'         => 'waiting',
+                ]);
+            });
+
+            return redirect()->route('home')->with('success', '商品の購入手続きが完了しました。コンビニでのお支払いをお願いします。');
+        }
+
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $session = \Stripe\Checkout\Session::create([

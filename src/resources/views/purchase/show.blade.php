@@ -92,6 +92,30 @@
     </div>
 </div>
 @endsection
+
 @section('scripts')
 <script src="{{ asset('js/purchase/purchase-page.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const wrapperOrSelect = document.getElementById('paymentMethodSelect');
+        const changeAddressLink = document.querySelector('.change-link');
+
+        if (wrapperOrSelect && changeAddressLink) {
+            const paymentSelect = wrapperOrSelect.tagName === 'SELECT' 
+                ? wrapperOrSelect 
+                : wrapperOrSelect.querySelector('select');
+
+            if (paymentSelect) {
+                paymentSelect.addEventListener('change', function() {
+                    const selectedValue = this.value;
+
+                    const url = new URL(changeAddressLink.href);
+                    url.searchParams.set('payment_method_code', selectedValue);
+
+                    changeAddressLink.href = url.toString();
+                });
+            }
+        }
+    });
+</script>
 @endsection

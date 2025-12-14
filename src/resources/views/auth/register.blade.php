@@ -9,7 +9,7 @@
 <div class="registration-container">
     <h1 class="page-title">会員登録</h1>
 
-    <form method="post" action="{{ route('register') }}" class="registration-form">
+    <form method="post" action="{{ route('register') }}" class="registration-form" novalidate>
         @csrf
 
         <x-forms.input

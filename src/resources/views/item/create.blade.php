@@ -16,7 +16,7 @@
 
             <div class="form-section">
                 <h3 class="section-header">商品画像</h3>
-                <div  id="image-upload-area" class="image-upload-area">
+                <div id="image-upload-area" class="image-upload-area">
                     <div id="image-preview" class="image-preview"></div>
 
                     <label for="item_image" class="upload-label" id="upload-label-button">
@@ -36,7 +36,12 @@
                 <div class="category-group">
                     @foreach ($categories as $category)
                         <label class="category-item">
-                            <input type="checkbox" name="categories[]" value="{{ $category->id }}" class="category-radio">
+                            <input type="checkbox"
+                                name="categories[]"
+                                value="{{ $category->id }}"
+                                class="category-radio"
+                                @if(in_array($category->id, old('categories', []))) checked @endif
+                            >
                             <span class="category-tag">{{ $category->name }}</span>
                         </label>
                     @endforeach
@@ -52,7 +57,9 @@
                     <select name="condition_id" id="condition_id" class="form-select">
                         <option value="" hidden>選択してください</option>
                         @foreach ($conditions as $condition)
-                            <option value="{{ $condition->id }}">{{ $condition->name }}</option>
+                            <option value="{{ $condition->id }}" @if(old('condition_id') == $condition->id) selected @endif>
+                                {{ $condition->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -119,7 +126,8 @@
 
             if (file) {
                 const reader = new FileReader();
-            reader.onload = function(e) {
+
+                reader.onload = function(e) {
                     previewArea.innerHTML = `<img src="${e.target.result}" class="preview-img">`;
 
                     if (uploadButton) {

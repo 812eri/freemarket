@@ -30,5 +30,10 @@
             <a href="{{ route('profile.show') }}" class="header-main__nav-link">マイページ</a>
             <a href="{{ route('item.create') }}" class="header-main__action-button">出品</a>
         @endauth
+
+        @guest
+            <a href="{{ route('login') }}" class="header-main__nav-link">ログイン</a>
+            <a href="{{ route('register') }}" class="header-main__nav-link">会員登録</a>
+        @endguest
     </div>
 </header>

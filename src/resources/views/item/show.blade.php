@@ -39,6 +39,10 @@
                                 </button>
                             </form>
                         @endif
+                    @else
+                        <a href="{{ route('login') }}" class="reaction-btn">
+                            <span class="icon-star">☆</span>
+                        </a>
                     @endauth
                     <span class="reaction-count">{{ $likeCount }}</span>
                 </div>

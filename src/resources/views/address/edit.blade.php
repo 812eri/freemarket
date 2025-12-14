@@ -13,6 +13,8 @@
         @csrf
         @method('patch')
 
+        <input type="hidden" name="payment_method_code" value="{{ $payment_method_code ?? request('payment_method_code') }}">
+
         <div class="form-group">
             <label for="post_code" class="form-label">郵便番号</label>
             <input
