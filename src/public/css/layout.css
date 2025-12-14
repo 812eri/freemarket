@@ -170,3 +170,25 @@
     color: #842029;
     border: 1px solid #f5c2c7;
 }
+
+@media screen and (max-width: 768px) {
+    .header-main {
+        flex-wrap: wrap;
+        padding: 0.5rem 1rem;
+    }
+
+    .header-main__left {
+        order: 1;
+    }
+
+    .header-main__action-group {
+        order: 2;
+    }
+
+    .header-main__search-form {
+        order: 3;
+        width: 100%;
+        max-width: none;
+        margin: 10px 0 0 0;
+    }
+}

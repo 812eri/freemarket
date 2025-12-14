@@ -135,3 +135,22 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+@media screen and (max-width: 768px) {
+    .item-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .item-card {
+        width: 100%;
+        max-width: none;
+
+        display: block;
+    }
+
+    .item-image-wrapper {
+        width: 100%;
+    }
+}
