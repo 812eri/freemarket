@@ -110,6 +110,139 @@ STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxx
 
 - **メール確認画面**: http://localhost:8025
 
+## テーブル設計
+
+<details>
+<summary>users テーブル</summary>
+
+| Column            | Type            | Options          | Description                |
+| :---------------- | :-------------- | :--------------- | :------------------------- |
+| id                | unsigned bigint | PK, Not Null     | ユーザー ID                |
+| name              | varchar(20)     | Not Null         | ユーザー名                 |
+| email             | varchar(255)    | Unique, Not Null | メールアドレス             |
+| email_verified_at | timestamp       | Nullable         | メール認証日時             |
+| password          | varchar(255)    | Not Null         | パスワード                 |
+| profile_image_url | varchar(255)    | Nullable         | プロフィール画像           |
+| profile_completed | boolean         | Not Null         | プロフィール入力完了フラグ |
+| remember_token    | varchar(100)    | Nullable         | ログイン保持トークン       |
+| created_at        | timestamp       | Nullable         | 作成日時                   |
+| updated_at        | timestamp       | Nullable         | 更新日時                   |
+
+</details>
+
+<details>
+<summary>items テーブル</summary>
+
+| Column       | Type            | Options                  | Description    |
+| :----------- | :-------------- | :----------------------- | :------------- |
+| id           | unsigned bigint | PK, Not Null             | 商品 ID        |
+| user_id      | unsigned bigint | FK(users), Not Null      | 出品者 ID      |
+| condition_id | unsigned bigint | FK(conditions), Not Null | 商品の状態 ID  |
+| name         | varchar(100)    | Not Null                 | 商品名         |
+| description  | varchar(255)    | Not Null                 | 商品説明       |
+| price        | integer         | Not Null                 | 価格           |
+| brand_name   | varchar(100)    | Nullable                 | ブランド名     |
+| image_url    | varchar(255)    | Not Null                 | 商品画像 URL   |
+| status       | varchar(255)    | Not Null                 | 販売ステータス |
+| is_sold      | boolean         | Not Null                 | 売却済みフラグ |
+| buyer_id     | unsigned bigint | FK(users), Nullable      | 購入者 ID      |
+| created_at   | timestamp       | Nullable                 | 作成日時       |
+| updated_at   | timestamp       | Nullable                 | 更新日時       |
+
+</details>
+
+<details>
+<summary>categories テーブル</summary>
+
+| Column     | Type            | Options          | Description   |
+| :--------- | :-------------- | :--------------- | :------------ |
+| id         | unsigned bigint | PK, Not Null     | カテゴリー ID |
+| name       | varchar(255)    | Unique, Not Null | カテゴリー名  |
+| created_at | timestamp       | Nullable         | 作成日時      |
+| updated_at | timestamp       | Nullable         | 更新日時      |
+
+</details>
+
+<details>
+<summary>conditions テーブル</summary>
+
+| Column     | Type            | Options          | Description |
+| :--------- | :-------------- | :--------------- | :---------- |
+| id         | unsigned bigint | PK, Not Null     | 状態 ID     |
+| name       | varchar(50)     | Unique, Not Null | 状態名      |
+| created_at | timestamp       | Nullable         | 作成日時    |
+| updated_at | timestamp       | Nullable         | 更新日時    |
+
+</details>
+
+<details>
+<summary>item_category テーブル (中間テーブル)</summary>
+
+| Column      | Type            | Options                      | Description   |
+| :---------- | :-------------- | :--------------------------- | :------------ |
+| item_id     | unsigned bigint | PK, FK(items), Not Null      | 商品 ID       |
+| category_id | unsigned bigint | PK, FK(categories), Not Null | カテゴリー ID |
+| created_at  | timestamp       | Nullable                     | 作成日時      |
+| updated_at  | timestamp       | Nullable                     | 更新日時      |
+
+</details>
+
+<details>
+<summary>addresses テーブル</summary>
+
+| Column         | Type            | Options             | Description |
+| :------------- | :-------------- | :------------------ | :---------- |
+| id             | unsigned bigint | PK, Not Null        | 住所 ID     |
+| user_id        | unsigned bigint | FK(users), Not Null | ユーザー ID |
+| post_code      | varchar(8)      | Not Null            | 郵便番号    |
+| street_address | varchar(100)    | Not Null            | 住所        |
+| building_name  | varchar(100)    | Nullable            | 建物名      |
+| created_at     | timestamp       | Nullable            | 作成日時    |
+| updated_at     | timestamp       | Nullable            | 更新日時    |
+
+</details>
+
+<details>
+<summary>purchases テーブル</summary>
+
+| Column         | Type            | Options                     | Description     |
+| :------------- | :-------------- | :-------------------------- | :-------------- |
+| id             | unsigned bigint | PK, Not Null                | 購入 ID         |
+| user_id        | unsigned bigint | FK(users), Not Null         | 購入ユーザー ID |
+| item_id        | unsigned bigint | FK(items), Unique, Not Null | 商品 ID         |
+| address_id     | unsigned bigint | FK(addresses), Not Null     | 住所 ID         |
+| payment_method | varchar(20)     | Not Null                    | 支払い方法      |
+| created_at     | timestamp       | Nullable                    | 作成日時        |
+| updated_at     | timestamp       | Nullable                    | 更新日時        |
+
+</details>
+
+<details>
+<summary>likes テーブル</summary>
+
+| Column     | Type            | Options                 | Description |
+| :--------- | :-------------- | :---------------------- | :---------- |
+| user_id    | unsigned bigint | PK, FK(users), Not Null | ユーザー ID |
+| item_id    | unsigned bigint | PK, FK(items), Not Null | 商品 ID     |
+| created_at | timestamp       | Nullable                | 作成日時    |
+| updated_at | timestamp       | Nullable                | 更新日時    |
+
+</details>
+
+<details>
+<summary>comments テーブル</summary>
+
+| Column     | Type            | Options             | Description  |
+| :--------- | :-------------- | :------------------ | :----------- |
+| id         | unsigned bigint | PK, Not Null        | コメント ID  |
+| user_id    | unsigned bigint | FK(users), Not Null | ユーザー ID  |
+| item_id    | unsigned bigint | FK(items), Not Null | 商品 ID      |
+| body       | varchar(255)    | Not Null            | コメント内容 |
+| created_at | timestamp       | Nullable            | 作成日時     |
+| updated_at | timestamp       | Nullable            | 更新日時     |
+
+</details>
+
 ## 使用技術
 
 - php 8.1
