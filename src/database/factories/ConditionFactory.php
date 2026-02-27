@@ -9,12 +9,13 @@ class ConditionFactory extends Factory
     /**
      * Define the model's default state.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function definition()
+    public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word(),
+            // unique() を使って重複を防ぐか、lexifyでランダム文字列を生成します
+            'name' => $this->faker->unique()->word . '_' . $this->faker->lexify('????'),
         ];
     }
 }
